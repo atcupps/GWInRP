@@ -20,9 +20,24 @@ def plot_noisy_curve():
 
     plt.figure()
     plt.loglog(inputs, curve)
-    plt.title('Simulated Gravitational Wave Noise Curve')
+    plt.title('Simulated Gravitational Wave Noise ASD')
     plt.xlabel('Frequency (Hz)')
-    plt.ylabel(r'PSD (1/$\sqrt{Hz}$)')
+    plt.ylabel(r'ASD (1/$\sqrt{Hz}$)')
     plt.show()
 
-plot_noisy_curve()
+def plot_noisy_freq_dep_wave():
+    inputs = np.linspace(10, 3000, 10000)
+    noise = white_noise(1, 0.1, 10000)
+    asd = noise_curvify(inputs) * noise
+    psd = asd ** 2
+    wave = np.real(np.fft.irfft(psd))
+    times = np.arange(1, len(wave) + 1)
+    
+    plt.figure()
+    plt.plot(times, wave)
+    plt.title('Simulated Noisy GW Detector Reading')
+    plt.xlabel('Time (sec)')
+    plt.ylabel('Amplitude')
+    plt.show()
+    
+plot_noisy_freq_dep_wave()
